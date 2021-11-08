@@ -22,13 +22,14 @@ class LoginController extends Controller
     {
         try {
             $validator = $this->validator($request->all());
-            if (!$validator->fails()) {
+            if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
+                    'status' => 402,
                     'error' => [
                         'email' => 'Invalid email or password1'
                     ]
-                ], 402);
+                ]);
             }
 //            if ($token = auth('api')->login(User::first())) {
 //                return response()->json([
@@ -47,13 +48,15 @@ class LoginController extends Controller
 //            }
             if ($token = auth('api')->attempt($request->only('email', 'password'))) {
                 return response()->json([
+                    'status' => 200,
                     'success' => true,
                     'user' => new UserResource(auth('api')->user()),
                     'token' => $token
-                ], 200);
+                ]);
 
             } else {
                 return response()->json([
+                    'status' => 403,
                     'success' => false,
                     'error' => [
                         'email' => 'Invalid email or password'
@@ -62,6 +65,7 @@ class LoginController extends Controller
             }
         } catch (JWTException $e) {
             return response()->json([
+                'status' => 500,
                 'success' => false,
                 'error' => [
                     'email' => 'Invalid email or password'
@@ -81,7 +85,7 @@ class LoginController extends Controller
     {
         return Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:3'],
         ]);
     }
 }

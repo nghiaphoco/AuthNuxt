@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-md-6">
         <h1>Login</h1>
+        <p>{{ error }}</p>
         <form>
           <div class="form-group">
             <label>Email address</label>
@@ -27,18 +28,37 @@
     data () {
       return {
         email: 'nghiadh@relipasoft.com',
-        password: '123456'
+        password: '123456',
+        error: ''
       }
     },
     methods: {
       async login () {
         await this.$auth.loginWith('local', { data: { email: this.email, password: this.password } })
           .then((res) => {
-            this.$auth.setToken('local', 'Bearer ' + res.data.token);
-            this.$auth.setStrategy('local');
+            // this.$auth.setToken('local', 'Bearer ' + res.data.token);
+            // this.$auth.setStrategy('local');
             // this.$store.commit('user/SET_MY_PROFILE', {})
-            this.$router.push('/')
+            if (res.data.status === true) {
+              this.$router.push('/')
+            } else {
+              this.error = 'Login false'
+            }
           })
+        // try {
+        //   await this.$auth.loginWith('local', {
+        //     data: { email: this.email, password: this.password }
+        //   }).then((res) => {
+        //     if (res.data.success === true) {
+        //       this.$router.push('/')
+        //     } else {
+        //       this.error = 'Login false'
+        //     }
+        //   })
+        // } catch (e) {
+        //   this.error = 'Login falses'
+        // }
+
       }
     }
   }

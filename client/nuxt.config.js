@@ -55,6 +55,11 @@ export default {
           login: { url: '/auth/login', method: 'post', propertyName: 'token' },
           user: { url: '/me', method: 'get', propertyName: 'user' },
           logout: false
+        },
+        redirect: {
+          login: '/auth/login',
+          callback: '/auth/login',
+          home: '/'
         }
       },
     }
